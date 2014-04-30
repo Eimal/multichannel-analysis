@@ -24,8 +24,6 @@ freq_end = 16000;    % obere Begrenzung
 Pathname_and_Filename = char(strcat(PathName,FileName));
 channelcnt = length(FileName) % Kanalanzahl automatisch ermittlen
 
-break
-
 resolution = menu('Choose the desired resolution','Octave (-)','Third (+)');
 
 % fft_rms_multichannel = ones(9,channelcnt); %channelcnt verbessern! 
