@@ -1,5 +1,3 @@
-% Hallo Hallo Github Änderungen
-
 %### Erzeugen eines Frequenzraster ###
 %### Auswahl Terz oder Oktaveraster mï¿½glich
 

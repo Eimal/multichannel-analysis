@@ -1,0 +1,3 @@
+x rms_value_storage_switched vermeiden
+start und endfrequenz dynamisch, Terz Oktav etc. nach vorne verlagern
+alles schön plotten (durchsteppen)
