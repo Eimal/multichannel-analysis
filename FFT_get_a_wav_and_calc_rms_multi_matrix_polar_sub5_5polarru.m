@@ -74,17 +74,22 @@ for i=1:channelcnt                                       % stepping through audi
     %%fft_rms_multichannel(:,i) = rms_value_channel;
     fft_rms_multichannel(:,i) = fft_band_multiple_rms_analysis(audioin,Fs,resolution,freq_start,freq_end);
 end
-load('resolution.mat');
 clear i;
 
 %rms_value_storage_switched = fft_rms_multichannel';
+
+%Quick&Dirty-Implementierung eines zweiten Polar-Kreises, der die Skalierung für unsere richtungs- und frequenzabhängigen RMS-Werte vorschreibt
+t2 = 0:2*pi/31:(2*pi);
+values = ones(1,32);
 
 %%% Hobohms Schleife. Erst später machen! %%% for k = 1: segmentcount-2       %stepping through matrix containing circular-information
 for k = 1:size(fft_rms_multichannel)
     t = 0:2*pi/31:(2*pi);
     
-    % 1.Polarplotzeile mit füönf plots
+    % 1.Polarplotzeile mit fünf plots
     subplot(4,5,(10+k)); 
+	polar(t2,values(1,:)); %Dieser Kreis gibt die Skalierung vor
+    hold on; %Hält den oberen Kreis fest, damit die SKalierung gleich bleibt
     polar(t,fft_rms_multichannel(k,:));           %macht visualisierung
     title(['Oktave=',int2str(k)], 'color','r')
     

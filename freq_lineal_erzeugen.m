@@ -52,4 +52,4 @@ while freq_start < freq_end_border;
 end
 freq_band(freq_band_index-1) = []; %lösche den letzten Wert, der nur entsteht, weil wir einen Index für freq_band_border mehr brauchen
 clear freq_band_index;
-save('resolution.mat','resolution');
+clear resolution;
