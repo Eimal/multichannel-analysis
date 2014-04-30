@@ -16,13 +16,15 @@
 clear all; 
 close all;
 
-channelcnt = 32; %verbessern!!!
 rmssegmentlen = 4096; 
 freq_start = 62.5;   % untere Begrenzung des zu analysierenden Spektrums
 freq_end = 16000;    % obere Begrenzung
 
 [FileName,PathName] = uigetfile('*.wav','Select the .wav file','Multiselect','on');
 Pathname_and_Filename = char(strcat(PathName,FileName));
+channelcnt = length(FileName) % Kanalanzahl automatisch ermittlen
+
+break
 
 resolution = menu('Choose the desired resolution','Octave (-)','Third (+)');
 
@@ -48,7 +50,7 @@ resolution = menu('Choose the desired resolution','Octave (-)','Third (+)');
 %         
 % end
 
-%Filter zum Entfernen des DC Offsets
+% Filter zum Entfernen des DC Offsets
     [audioin,Fs] = audioread(Pathname_and_Filename(1,:));
     dc_offset_filter_objects = fdesign.highpass('N,F3db',40,10/Fs);
     dc_offset_filter = design(dc_offset_filter_objects,'butter');
