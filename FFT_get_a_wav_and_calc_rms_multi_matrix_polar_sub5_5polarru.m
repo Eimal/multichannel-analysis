@@ -20,6 +20,13 @@ rmssegmentlen = 4096;
 freq_start = 62.5;   % untere Begrenzung des zu analysierenden Spektrums
 freq_end = 16000;    % obere Begrenzung
 
+% ##### WORK IN PROGRESS #####
+% d = uigetdir(pwd, 'Select a folder');
+% files = dir(fullfile(d, '*.jpg'));
+% % Display the names
+% files.name
+% ##### ##### ####### ########
+
 [FileName,PathName] = uigetfile('*.wav','Select the .wav file','Multiselect','on');
 Pathname_and_Filename = char(strcat(PathName,FileName));
 channelcnt = length(FileName) % Kanalanzahl automatisch ermittlen
