@@ -29,97 +29,55 @@ freq_end = 16000;    % obere Begrenzung
 
 [FileName,PathName] = uigetfile('*.wav','Select the .wav file','Multiselect','on');
 Pathname_and_Filename = char(strcat(PathName,FileName));
-channelcnt = length(FileName) % Kanalanzahl automatisch ermittlen
+channelcnt = length(FileName); % Kanalanzahl automatisch ermittlen
 
 resolution = menu('Choose the desired resolution','Octave (-)','Third (+)');
 
-% fft_rms_multichannel = ones(9,channelcnt); %channelcnt verbessern! 
+audio_1 = audioread(Pathname_and_Filename(channelcnt,:));       %wir halten nur die letzte der Wave-Dateien im RAM zum Plotten (nicht die erste, weil die RMS-Schleife mit der letzten Wave-Datei aufhört und diese zum Plotten weitergegeben wird. 
+info = audioinfo(Pathname_and_Filename(channelcnt,:));          %Infos über die Audiodaten lesen
+bits = info.BitsPerSample;
+Fs = info.SampleRate;
+segmentcount = floor(info.TotalSamples/rmssegmentlen);          %Berechnet die Anzahl möglicher Segmente der Audio-Dateien
+t = 0:2*pi/31:(2*pi);                                           %wird für die Polarbefehle benötigt
+rumfummel_begrenzung = ones(1,32); %Quick&Dirty-Implementierung eines zweiten Polar-Kreises, der die Skalierung für unsere richtungs- und frequenzabhängigen RMS-Werte vorschreibt
 
-% for i=1:channelcnt                                       % stepping through audio-files
-%     [audioin,Fs,bits] = wavread(Pathname_and_Filename(i,:)); 
-%     segmentcount =floor((size(audioin)/rmssegmentlen));
-%         
-%     for j = 1:(segmentcount-2)                           %stepping through timesements
-%         segmentstart =(((j*rmssegmentlen)+1)-rmssegmentlen);
-%         segmentend = j*rmssegmentlen;
-%         segmentaudio = audioin((((j*rmssegmentlen)+1)-rmssegmentlen):j*rmssegmentlen);
-%         subplot(2,1,1); 
-%         plot(segmentaudio);
-%         title(FileName(1,i), 'color','r');
-%         %pause(0.001)
-%         pseudorms(j,i) = mean(abs(segmentaudio)); 
-%         pseudorms_dbfs(j,i) = rms_to_dbfs(pseudorms(j,i)); 
-%         pseudorms_dbfs(j,channelcnt+1) = pseudormsfs(j,1) % 360degree  represented by 0degree
-%     
-%     end
-%         
-% end
+for j = 1:segmentcount %%% Segment-Schleife %%%
+    clf; %reset aller Plots
+    segment_start = ((j*rmssegmentlen)+1)-rmssegmentlen;
+    segment_end = j*rmssegmentlen;
+    
+    for i = 1:channelcnt %%% RMS-Schleife %%%
+        [audioin] = audioread(Pathname_and_Filename(i,:),[segment_start,segment_end]); % das aktuelle Audiosegment wird in "audioin" geschrieben
+        [fft_rms_multichannel(:,i),freq_band] = fft_band_multiple_rms_analysis(audioin,Fs,resolution,freq_start,freq_end); % audioin wird in mehrere Frequenzbänder zerlegt und für jedes Band der RMS bestimmt
+    end
+    i = 1;
+    
+    %%% Plotten %%%
+    subplot(4,1,1);                                             %Platzierung der folgenden Zeile an oberster Stelle
+    plot(audio_1,'b');                                          %Plottet die letzte der ausgewählten Wave-Dateien
+    hold on;
+    redplot = zeros(size(audio_1));                             %Erstellt den Vektor für die rote Markierung des aktuellene Segments. Der Vektor muss genau so groß sein wie die erste Wave-Datei
+    redplot(segment_start:segment_end) = audioin;               %Schriebt in den Vektor für die rote Markierung die Werte des aktuellen Segments. 
+    plot(redplot,'r');                                          %Plottet das aktuelle Segment rot
+    title(FileName(1,1), 'color','r','Interpreter','none');
+    subplot(4,1,2);                                             %Platziert die folgende Zeile an zweiter Stelle
+    plot(audioin);                                              %Plottet das aktuelle Segment
+    title(['Segment #',num2str(j)],'color','r','Interpreter','none');
+    rumfummel_begrenzung(1,:) = 1.2*max(max(fft_rms_multichannel,[],2));    %findet das Maximum aus jeder Zeile des RMS Arrays und findet davon das Maximum 8-) -> wir legen den äußeren Rumfummelkreis fest
+    
+    for k = 1:size(fft_rms_multichannel) %%% Polardiagram-Schleife %%%
+        subplot(4,5,(10+k)); 
+        polar(t,rumfummel_begrenzung(1,:),'-k'); %Dieser Kreis gibt die Skalierung vor. Das ist ein ziemliches Rumgefummel. Unter mit 0.4 und 0.3 funktioniert der Trick nicht. Wir müssen eine bessere Lösung finden. 
+        %plot(plot:Polar([1, u], u = 0..2*PI)); %mit MuPad?
+        hold on; %Hält den oberen Kreis fest, damit die SKalierung gleich bleibt
+        polar(t,fft_rms_multichannel(k,:));           %macht visualisierung
+        title([num2str(freq_band(k)),' Hz'],'color','r'); %benennt die einzelnen Polardiagramme nach ihren entsprechenden Mittenfrequenzen 'freq_band'
+    end
+    k = 1;
 
-% Filter zum Entfernen des DC Offsets
-    [audioin,Fs] = audioread(Pathname_and_Filename(1,:));
-    dc_offset_filter_objects = fdesign.highpass('N,F3db',40,10/Fs);
-    dc_offset_filter = design(dc_offset_filter_objects,'butter');
-    
-    
-    
-for i=1:channelcnt                                       % stepping through audio-files
-    [audioin,Fs,bits] = wavread(Pathname_and_Filename(i,:)); 
-    segmentcount = floor((size(audioin)/rmssegmentlen));
-    % entfernt den DC Offset aus dem audioin
-    audioin = filter(dc_offset_filter,audioin);
-
-    
-    %%%% Unnötige Schritte zusammenfassen %%%%
-    %%rms_value_channel = fft_band_multiple_rms_analysis(audioin,Fs,resolution);
-    %%fft_rms_multichannel(:,i) = rms_value_channel;
-    fft_rms_multichannel(:,i) = fft_band_multiple_rms_analysis(audioin,Fs,resolution,freq_start,freq_end);
+pause()
 end
-clear i;
-
-%rms_value_storage_switched = fft_rms_multichannel';
-
-%Quick&Dirty-Implementierung eines zweiten Polar-Kreises, der die Skalierung für unsere richtungs- und frequenzabhängigen RMS-Werte vorschreibt
-t2 = 0:2*pi/31:(2*pi);
-values = ones(1,32);
-
-%%% Hobohms Schleife. Erst später machen! %%% for k = 1: segmentcount-2       %stepping through matrix containing circular-information
-for k = 1:size(fft_rms_multichannel)
-    t = 0:2*pi/31:(2*pi);
-    
-    % 1.Polarplotzeile mit fünf plots
-    subplot(4,5,(10+k)); 
-	polar(t2,values(1,:)); %Dieser Kreis gibt die Skalierung vor
-    hold on; %Hält den oberen Kreis fest, damit die SKalierung gleich bleibt
-    polar(t,fft_rms_multichannel(k,:));           %macht visualisierung
-    title(['Oktave=',int2str(k)], 'color','r')
-    
-    k = k+1;
-    
-    
-    
-%     subplot(4,5,[1 5]);
-%     plot(audioin,'b');
-%     title(FileName(1,1), 'color','r');
-%     
-%     hold on;
-%     
-%     st = ((k*rmssegmentlen)+1)-rmssegmentlen;
-%     en = k*rmssegmentlen;
-%     actaudio = zeros(size(audioin));
-%     actaudio(st:en) = audioin(st:en);
-%     plot(actaudio,'r');        %draw red zero line with amlitude at selected segment
-%     
-%     subplot(4,5,[6 10]);
-%     plot(audioin(st:en),'b');
-%     
-%     hold off;
-%     pause()
-end
-clear k;
 break
-
-
-
 
 
 %Effektivwertbestimmung

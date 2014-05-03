@@ -8,7 +8,7 @@
 % [filenameWavR,pathnameWavR]=uigetfile('*.wav','Audio-Datei auswählen');
 % [audioin,fs,bits]=wavread([pathnameWavR filenameWavR]);
 
-function [fft_bands_section_rms] = fft_band_multiple_rms_analysis(audioin,fs,resolution,freq_start,freq_end) %; semicolon not necessary
+function [fft_bands_section_rms,freq_band] = fft_band_multiple_rms_analysis(audioin,fs,resolution,freq_start,freq_end) %; semicolon not necessary
 
 audio_end = length(audioin);
 
