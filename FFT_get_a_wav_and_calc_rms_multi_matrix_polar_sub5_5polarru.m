@@ -20,20 +20,22 @@ rmssegmentlen = 4096;
 freq_start = 62.5;   % untere Begrenzung des zu analysierenden Spektrums
 freq_end = 16000;    % obere Begrenzung
 
-% ##### WORK IN PROGRESS #####
-% d = uigetdir(pwd, 'Select a folder');
-% files = dir(fullfile(d, '*.jpg'));
-% % Display the names
-% files.name
-% ##### ##### ####### ########
+% Select Folder and get files
+dirName = uigetdir(pwd, 'Select a sound sample folder');
+dirData = dir(dirName);      %# Get the data for the current directory
+  dirIndex = [dirData.isdir];  %# Find the index for directories
+    fileList = {dirData(~dirIndex).name}';  %'# Get a list of the files
+    fileList = cellfun(@(x) fullfile(dirName,x),...  %# Prepend path to files
+                       fileList,'UniformOutput',false);
 
-[FileName,PathName] = uigetfile('*.wav','Select the .wav file','Multiselect','on');
-Pathname_and_Filename = char(strcat(PathName,FileName));
-channelcnt = length(FileName); % Kanalanzahl automatisch ermittlen
-
+Pathname_and_Filename = char(fileList);
+channelcnt = length(fileList); % Kanalanzahl automatisch ermittlen
 resolution = menu('Choose the desired resolution','Octave (-)','Third (+)');
 
 audio_1 = audioread(Pathname_and_Filename(channelcnt,:));       %wir halten nur die letzte der Wave-Dateien im RAM zum Plotten (nicht die erste, weil die RMS-Schleife mit der letzten Wave-Datei aufhört und diese zum Plotten weitergegeben wird. 
+
+break
+
 info = audioinfo(Pathname_and_Filename(channelcnt,:));          %Infos über die Audiodaten lesen
 bits = info.BitsPerSample;
 Fs = info.SampleRate;
