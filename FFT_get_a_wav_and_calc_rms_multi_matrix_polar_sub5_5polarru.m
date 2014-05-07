@@ -59,10 +59,10 @@ for j = 1:segmentcount %%% Segment-Schleife %%%
     redplot(segment_start:segment_end) = audioin;               %Schriebt in den Vektor für die rote Markierung die Werte des aktuellen Segments. 
     plot(redplot,'r');                                          %Plottet das aktuelle Segment rot
     title(fileList(1,1), 'color','r','Interpreter','none');
-    subplot(4,1,2);                                             %Platziert die folgende Zeile an zweiter Stelle
-    plot(audioin);                                              %Plottet das aktuelle Segment
-    title(['Segment #',num2str(j)],'color','r','Interpreter','none');
-    subplot(4,5,[6 10]); % data of channel 31 is used
+%     subplot(4,1,2);                                             %Platziert die folgende Zeile an zweiter Stelle
+%     plot(audioin);                                              %Plottet das aktuelle Segment
+%     title(['Segment #',num2str(j)],'color','r','Interpreter','none');
+    subplot(4,1,2); % data of channel 31 is used
     [Y,F,T,P] = spectrogram(audio_1,1024,998);%draw filtered spectrogram: noch fehlerhaft
     surf(T,F,10*log10(abs(P)),'EdgeColor','none');
     axis xy; axis tight; view(0,90); %Drehung der Zeitachse um 90%
