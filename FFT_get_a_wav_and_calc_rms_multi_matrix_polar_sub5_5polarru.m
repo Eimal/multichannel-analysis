@@ -69,11 +69,12 @@ for j = 1:segmentcount %%% Segment-Schleife %%%
     rumfummel_begrenzung(1,:) = 1.2*max(max(fft_rms_multichannel,[],2));    %findet das Maximum aus jeder Zeile des RMS Arrays und findet davon das Maximum 8-) -> wir legen den äußeren Rumfummelkreis fest
     
     for k = 1:size(fft_rms_multichannel) %%% Polardiagram-Schleife %%%
-        subplot(4,5,(10+k)); 
-        polar(t,rumfummel_begrenzung(1,:),'-k'); %Dieser Kreis gibt die Skalierung vor. Das ist ein ziemliches Rumgefummel. Unter mit 0.4 und 0.3 funktioniert der Trick nicht. Wir müssen eine bessere Lösung finden. 
+        subplot(4,5,(10+k));
+        %%polar(t,rumfummel_begrenzung(1,:),'-r'); %Dieser Kreis gibt die Skalierung vor. Das ist ein ziemliches Rumgefummel. Unter mit 0.4 und 0.3 funktioniert der Trick nicht. Wir müssen eine bessere Lösung finden. 
+        polar(0,160,'-g') %%%% temporärer Ersatz für die Zeile darüber %%% 160 anpassen 
         %plot(plot:Polar([1, u], u = 0..2*PI)); %mit MuPad?
-        hold on; %Hält den oberen Kreis fest, damit die SKalierung gleich bleibt
-        polar(t,fft_rms_multichannel(k,:));           %macht visualisierung
+        hold on;                                %Hält den oberen Kreis fest, damit die SKalierung gleich bleibt
+        polar(t,96+fft_rms_multichannel(k,:));  %%%%96 anpassen (OFFSET, UM DBFS BESTMÖGLICH DARSTELLEN ZU KÖNNEN. DURCH DIESEN WORKAROUND WERDEN ALLE DIAGRAMME UM 180° GEDREHT DARGESTELLT -> MIT TESTSIGNALEN ÜBERPRÜFEN!! TODO        %macht visualisierung
         title([num2str(freq_band(k)),' Hz'],'color','r'); %benennt die einzelnen Polardiagramme nach ihren entsprechenden Mittenfrequenzen 'freq_band'
     end
     k = 1;
