@@ -33,9 +33,6 @@ channelcnt = length(fileList); % Kanalanzahl automatisch ermittlen
 resolution = menu('Choose the desired resolution','Octave (-)','Third (+)');
 
 audio_1 = audioread(Pathname_and_Filename(channelcnt,:));       %wir halten nur die letzte der Wave-Dateien im RAM zum Plotten (nicht die erste, weil die RMS-Schleife mit der letzten Wave-Datei aufhˆrt und diese zum Plotten weitergegeben wird. 
-
-break
-
 info = audioinfo(Pathname_and_Filename(channelcnt,:));          %Infos ¸ber die Audiodaten lesen
 bits = info.BitsPerSample;
 Fs = info.SampleRate;
@@ -61,10 +58,14 @@ for j = 1:segmentcount %%% Segment-Schleife %%%
     redplot = zeros(size(audio_1));                             %Erstellt den Vektor f¸r die rote Markierung des aktuellene Segments. Der Vektor muss genau so groﬂ sein wie die erste Wave-Datei
     redplot(segment_start:segment_end) = audioin;               %Schriebt in den Vektor f¸r die rote Markierung die Werte des aktuellen Segments. 
     plot(redplot,'r');                                          %Plottet das aktuelle Segment rot
-    title(FileName(1,1), 'color','r','Interpreter','none');
+    title(fileList(1,1), 'color','r','Interpreter','none');
     subplot(4,1,2);                                             %Platziert die folgende Zeile an zweiter Stelle
     plot(audioin);                                              %Plottet das aktuelle Segment
     title(['Segment #',num2str(j)],'color','r','Interpreter','none');
+    subplot(4,5,[6 10]); % data of channel 31 is used
+    [Y,F,T,P] = spectrogram(audio_1,1024,998);%draw filtered spectrogram: noch fehlerhaft
+    surf(T,F,10*log10(abs(P)),'EdgeColor','none');
+    axis xy; axis tight; view(0,90); %Drehung der Zeitachse um 90%
     rumfummel_begrenzung(1,:) = 1.2*max(max(fft_rms_multichannel,[],2));    %findet das Maximum aus jeder Zeile des RMS Arrays und findet davon das Maximum 8-) -> wir legen den ‰uﬂeren Rumfummelkreis fest
     
     for k = 1:size(fft_rms_multichannel) %%% Polardiagram-Schleife %%%
