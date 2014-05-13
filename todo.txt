@@ -1,3 +1,10 @@
 x rms_value_storage_switched vermeiden
-start und endfrequenz dynamisch, Terz Oktav etc. nach vorne verlagern
-alles sch�n plotten (durchsteppen)
+x start und endfrequenz dynamisch, Terz Oktav etc. nach vorne verlagern
+x alles schön plotten (durchsteppen)
+stationäre Plots aus der Schleife auslagern
+RMS-Werte scheinen nicht zu stimmen (Werte über 1?)
+variable Segmentlänge
+Rumfummel-Kreis funktioniert nicht gut
+zu wenig Platz für Polardiagramme bei Terzabstand
+Fehler bei Terzabstand
+UTF8 Skript
