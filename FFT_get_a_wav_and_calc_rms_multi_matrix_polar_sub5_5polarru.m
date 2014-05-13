@@ -45,14 +45,22 @@ for j = 1:segmentcount %%% Segment-Schleife %%%
     segment_start = ((j*rmssegmentlen)+1)-rmssegmentlen;
     segment_end = j*rmssegmentlen;
     
-    for i = 1:channelcnt %%% RMS-Schleife %%%
+    %%%ungefilterter Polarplot%%%
+    for i = 1:channelcnt %%% RMS-Schleife global %%%
+        [audioin] = wavread(Pathname_and_Filename(i,:),[segment_start,segment_end]);
+%         [rms_global(:,i)] = rms_multiband(audioin); % benötigt MATLAB neural network toolbox
+        [rms_global(:,i)] = rms(audioin);
+    end
+    
+    %%% RMS-Schleife %%%
+    for i = 1:channelcnt 
         [audioin] = audioread(Pathname_and_Filename(i,:),[segment_start,segment_end]); % das aktuelle Audiosegment wird in "audioin" geschrieben
         [fft_rms_multichannel(:,i),freq_band] = fft_band_multiple_rms_analysis(audioin,Fs,resolution,freq_start,freq_end); % audioin wird in mehrere Frequenzbänder zerlegt und für jedes Band der RMS bestimmt
     end
     i = 1;
     
     %%% Plotten %%%
-    subplot(4,1,1);                                             %Platzierung der folgenden Zeile an oberster Stelle
+    subplot(4,5,[1 4]);                                         %Platzierung der folgenden Zeile an oberster Stelle, mit einer Breite von 1-4 (von maximal 5)
     plot(audio_1,'b');                                          %Plottet die letzte der ausgewählten Wave-Dateien
     hold on;
     redplot = zeros(size(audio_1));                             %Erstellt den Vektor für die rote Markierung des aktuellene Segments. Der Vektor muss genau so groß sein wie die erste Wave-Datei
@@ -68,7 +76,17 @@ for j = 1:segmentcount %%% Segment-Schleife %%%
     axis xy; axis tight; view(0,90); %Drehung der Zeitachse um 90%
     rumfummel_begrenzung(1,:) = 1.2*max(max(fft_rms_multichannel,[],2));    %findet das Maximum aus jeder Zeile des RMS Arrays und findet davon das Maximum 8-) -> wir legen den äußeren Rumfummelkreis fest
     
-    for k = 1:size(fft_rms_multichannel) %%% Polardiagram-Schleife %%%
+    %RMS Global plot
+    for k= 1:size(rms_global)
+        subplot(4,5,5);
+        polar(t,rms_global(1,:), '-k'); %Dieser Kreis gibt die Skalierung vor. Das ist ein ziemliches Rumgefummel. Unter mit 0.4 und 0.3 funktioniert der Trick nicht. Wir müssen eine bessere Lösung finden. 
+        hold on;%Hält den oberen Kreis fest, damit die SKalierung gleich bleibt
+        polar(t,rms_global(k,:)); %macht visualisierung
+        title(['Global Polar'],'color','r');
+    end
+    
+    %%% Polardiagram-Schleife %%%
+    for k = 1:size(fft_rms_multichannel) 
         subplot(4,5,(10+k));
         %%polar(t,rumfummel_begrenzung(1,:),'-r'); %Dieser Kreis gibt die Skalierung vor. Das ist ein ziemliches Rumgefummel. Unter mit 0.4 und 0.3 funktioniert der Trick nicht. Wir müssen eine bessere Lösung finden. 
         polar(0,160,'-g') %%%% temporärer Ersatz für die Zeile darüber %%% 160 anpassen 
@@ -82,25 +100,3 @@ for j = 1:segmentcount %%% Segment-Schleife %%%
 pause()
 end
 break
-
-
-%Effektivwertbestimmung
-rms_interval = 4096; %Zeitdauer für die rms- Bestimmung 
-shortaudioin = audioin(1:44100);
-rmsinterval_count = size(shortaudioin) / rms_interval %Berechnung der  Intervalle, die ausgewertet werden 
-rmsresult_of_interval = ones(1,rmsinterval_count)
-
-for k=1:rmsinterval_count
-
-    audiosegm_for_rmsdetect = (shortaudioin( ((k-1)*rms_interval)+1 : k*rms_interval));
-    rectifiedaudio =(audiosegm_for_rmsdetect.*audiosegm_for_rmsdetect);
-    plot(rectifiedaudio,'r');
-       
-    rmsresult_of_interval(k)= sqrt(sum(rectifiedaudio) /  rms_interval);
-    
-end
-clear k;
-hold on;
-plot(shortaudioin);      %show timesignal
-
-wavplay(audioin,Fs);
