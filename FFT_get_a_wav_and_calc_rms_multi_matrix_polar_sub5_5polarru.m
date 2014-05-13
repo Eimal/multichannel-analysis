@@ -45,17 +45,12 @@ for j = 1:segmentcount %%% Segment-Schleife %%%
     segment_start = ((j*rmssegmentlen)+1)-rmssegmentlen;
     segment_end = j*rmssegmentlen;
     
-    %%%ungefilterter Polarplot%%%
-    for i = 1:channelcnt %%% RMS-Schleife global %%%
-        [audioin] = wavread(Pathname_and_Filename(i,:),[segment_start,segment_end]);
-%         [rms_global(:,i)] = rms_multiband(audioin); % benötigt MATLAB neural network toolbox
-        [rms_global(:,i)] = rms(audioin);
-    end
-    
     %%% RMS-Schleife %%%
     for i = 1:channelcnt 
         [audioin] = audioread(Pathname_and_Filename(i,:),[segment_start,segment_end]); % das aktuelle Audiosegment wird in "audioin" geschrieben
         [fft_rms_multichannel(:,i),freq_band] = fft_band_multiple_rms_analysis(audioin,Fs,resolution,freq_start,freq_end); % audioin wird in mehrere Frequenzbänder zerlegt und für jedes Band der RMS bestimmt
+        [rms_global(:,i)] = rms(audioin);   %Jakob&Eric haben diesen Aufruf samt erneutem Audioread in eine gesonderte Schleife geschrieben. In kompakter Form jetzt hier als Einzeiler.
+        %[rms_global(:,i)] = rms_multiband(audioin); % benötigt MATLAB neural network toolbox
     end
     i = 1;
     
@@ -70,23 +65,24 @@ for j = 1:segmentcount %%% Segment-Schleife %%%
 %     subplot(4,1,2);                                             %Platziert die folgende Zeile an zweiter Stelle
 %     plot(audioin);                                              %Plottet das aktuelle Segment
 %     title(['Segment #',num2str(j)],'color','r','Interpreter','none');
+
+    %Polardiagramm des gesamten Spektrums %%Jakob&Eric haben den folgenden Block in einer nested-Schleife geschrieben. In kompakter Form jetzt an der allgemeinen Plot-Stelle. 
+    subplot(4,5,5);                     %Bei einer 4x5 Tabelle wird die folgende Grafik auf Zelle #5 geplottet
+    %polar(t,rms_global(1,:), '-k');     %Dieser Kreis gibt die Skalierung vor. Das ist ein ziemliches Rumgefummel. Unter mit 0.4 und 0.3 funktioniert der Trick nicht. Wir müssen eine bessere Lösung finden. 
+    polar(t,rms_global(1,:));           %macht visualisierung
+    hold on;                            %Hält den oberen Kreis fest, damit die SKalierung gleich bleibt
+    title(['Global Polar'],'color','r');
+    
+    %Hobohms Spektrogramm%
     subplot(4,1,2); % data of channel 31 is used
     [Y,F,T,P] = spectrogram(audio_1,1024,998);%draw filtered spectrogram: noch fehlerhaft
     surf(T,F,10*log10(abs(P)),'EdgeColor','none');
     axis xy; axis tight; view(0,90); %Drehung der Zeitachse um 90%
     rumfummel_begrenzung(1,:) = 1.2*max(max(fft_rms_multichannel,[],2));    %findet das Maximum aus jeder Zeile des RMS Arrays und findet davon das Maximum 8-) -> wir legen den äußeren Rumfummelkreis fest
     
-    %RMS Global plot
-    for k= 1:size(rms_global)
-        subplot(4,5,5);
-        polar(t,rms_global(1,:), '-k'); %Dieser Kreis gibt die Skalierung vor. Das ist ein ziemliches Rumgefummel. Unter mit 0.4 und 0.3 funktioniert der Trick nicht. Wir müssen eine bessere Lösung finden. 
-        hold on;%Hält den oberen Kreis fest, damit die SKalierung gleich bleibt
-        polar(t,rms_global(k,:)); %macht visualisierung
-        title(['Global Polar'],'color','r');
-    end
-    
     %%% Polardiagram-Schleife %%%
     for k = 1:size(fft_rms_multichannel) 
+        %Polardiagramme aller Frequenzbänder 
         subplot(4,5,(10+k));
         %%polar(t,rumfummel_begrenzung(1,:),'-r'); %Dieser Kreis gibt die Skalierung vor. Das ist ein ziemliches Rumgefummel. Unter mit 0.4 und 0.3 funktioniert der Trick nicht. Wir müssen eine bessere Lösung finden. 
         polar(0,160,'-g') %%%% temporärer Ersatz für die Zeile darüber %%% 160 anpassen 
