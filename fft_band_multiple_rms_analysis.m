@@ -15,6 +15,16 @@ audio_end = length(audioin);
 fft_points = 4096; %%Verbessern!!
 fft_bandwith = fs / fft_points;
 
+%%% Variablen für die Produkterkennung von Matlab
+neural_network_toolbox = 0;
+signal_processing_toolbox = 0;
+if ver_product('Neural Network Toolbox') == 1
+    neural_network_toolbox = 1;
+end
+if ver_product('Signal Processing Toolbox') == 1
+    signal_processing_toolbox = 1;
+end
+
 %%%Durch Übergabe in Funktion auskommentiert%%% 
 % resolution = 1; % 1 für Oktav, 2 für Terzband
 % freq_start = 62.5;   % untere Begrenzung des zu analysierenden Spektrums
@@ -51,7 +61,11 @@ while k < audio_end;
     %%%Die Funktion "rms" aus MATLABs Signal Processing Toolbox ersetzt Jakobs eigene Funktion rms_multiband. 
     %%%RMS wird aus dem Vektor "fft_bands_all" aus dem oben erzeugten Bereich gebildet.
 %dB     fft_bands_section_rms(j) = 10*log(rms_multiband(fft_bands_all(fft_bands_index:fft_bands_index_end))); %10*log = Umrechnung in dBFS
-    fft_bands_section_rms(j) = rms_multiband(fft_bands_all(fft_bands_index:fft_bands_index_end)); %-dB
+    if neural_network_toolbox == 1 %-dB %%% Je nachdem, welche Tools installiert sind, wird RMS über die folgenden Befehle ermittelt %%%
+        fft_bands_section_rms(j) = rms_multiband(fft_bands_all(fft_bands_index:fft_bands_index_end)); 
+    elseif signal_processing_toolbox == 1
+        fft_bands_section_rms(j) = rms(fft_bands_all(fft_bands_index:fft_bands_index_end)); 
+    end
     j = j + 1;
 	fft_bands_index = fft_bands_index_end+1;
     end
