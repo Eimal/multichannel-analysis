@@ -46,8 +46,8 @@ end
 
 
 
-t = 0:2*pi/31:(2*pi);                                           %wird für die Polarbefehle benötigt
-rumfummel_begrenzung = ones(1,32); %Quick&Dirty-Implementierung eines zweiten Polar-Kreises, der die Skalierung für unsere richtungs- und frequenzabhängigen RMS-Werte vorschreibt
+t = 0:2*pi/(channelcnt-1):(2*pi);                                           %wird für die Polarbefehle benötigt
+rumfummel_begrenzung = ones(1,channelcnt); %Quick&Dirty-Implementierung eines zweiten Polar-Kreises, der die Skalierung für unsere richtungs- und frequenzabhängigen RMS-Werte vorschreibt
 
 for j = 1:segmentcount %%% Segment-Schleife %%%
     clf; %reset aller Plots
@@ -90,7 +90,7 @@ for j = 1:segmentcount %%% Segment-Schleife %%%
     hold on;                            %Hält den oberen Kreis fest, damit die SKalierung gleich bleibt
     title(['Global Polar'],'color','r');
     
-    %Hobohms Spektrogramm%
+    %Spektrogramm (von Hobohms Skript%
     subplot(4,1,2); % data of channel 31 is used
     [Y,F,T,P] = spectrogram(audio_1,1024,998);%draw filtered spectrogram: noch fehlerhaft
     surf(T,F,10*log10(abs(P)),'EdgeColor','none');
