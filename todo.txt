@@ -4,7 +4,7 @@ x alles schön plotten (durchsteppen)
 x Skript soll mit mehr und weniger als 32wavs funktionieren
 x Global Plot und Erster Waveplot sollen sich überlagern, damit das Spektrogram so groß wie die blaue Wellenform ist
 stationäre Plots aus der Schleife auslagern
-RMS-Werte scheinen nicht zu stimmen (Werte über 1?)
+x RMS-Werte scheinen nicht zu stimmen (Werte über 1?)
 variable Segmentlänge
 Rumfummel-Kreis funktioniert nicht gut
 zu wenig Platz für Polardiagramme bei Terzabstand

@@ -38,7 +38,7 @@ fft_bands_section_rms = ones(1,length_freq_mid);
 while k < audio_end;
     fft_in = audio_passend(k:(k+(fft_points-1)));
     k = k + fft_points;
-    fft_bands_all = abs(fft(fft_in));
+    fft_bands_all = (1/fft_points).*abs(fft(fft_in));
     % magnitude_y = abs(fft_bands_all);
     
     while j < length_freq_grenz;
@@ -50,8 +50,8 @@ while k < audio_end;
     
     %%%Die Funktion "rms" aus MATLABs Signal Processing Toolbox ersetzt Jakobs eigene Funktion rms_multiband. 
     %%%RMS wird aus dem Vektor "fft_bands_all" aus dem oben erzeugten Bereich gebildet.
-%     fft_bands_section_rms(j) = 10*log(rms(fft_bands_all(fft_bands_index:fft_bands_index_end))); %10*log = Umrechnung in dBFS
-    fft_bands_section_rms(j) = 10*log(rms_multiband(fft_bands_all(fft_bands_index:fft_bands_index_end))); %10*log = Umrechnung in dBFS
+%dB     fft_bands_section_rms(j) = 10*log(rms_multiband(fft_bands_all(fft_bands_index:fft_bands_index_end))); %10*log = Umrechnung in dBFS
+    fft_bands_section_rms(j) = rms_multiband(fft_bands_all(fft_bands_index:fft_bands_index_end)); %-dB
     j = j + 1;
 	fft_bands_index = fft_bands_index_end+1;
     end
