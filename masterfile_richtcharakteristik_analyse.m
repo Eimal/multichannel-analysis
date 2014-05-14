@@ -92,9 +92,12 @@ for j = 1:segmentcount %%% Segment-Schleife %%%
     
     %Spektrogramm (von Hobohms Skript%
     subplot(4,1,2); % data of channel 31 is used
-    [Y,F,T,P] = spectrogram(audio_1,1024,998);%draw filtered spectrogram: noch fehlerhaft
+    if j == 1
+        [Y,F,T,P] = spectrogram(audio_1,1024,576);%draw filtered spectrogram: noch fehlerhaft
+    end
     surf(T,F,10*log10(abs(P)),'EdgeColor','none');
     axis xy; axis tight; view(0,90); %Drehung der Zeitachse um 90%
+    colorbar('location','eastoutside');
     rumfummel_begrenzung(1,:) = 1.2*max(max(fft_rms_multichannel,[],2));    %findet das Maximum aus jeder Zeile des RMS Arrays und findet davon das Maximum 8-) -> wir legen den äußeren Rumfummelkreis fest
     
     %%% Polardiagram-Schleife %%%
