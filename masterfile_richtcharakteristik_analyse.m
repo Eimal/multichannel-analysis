@@ -32,11 +32,20 @@ Pathname_and_Filename = char(fileList);
 channelcnt = length(fileList); % Kanalanzahl automatisch ermittlen
 resolution = menu('Choose the desired resolution','Octave (-)','Third (+)');
 
-audio_1 = audioread(Pathname_and_Filename(channelcnt,:));       %wir halten nur die letzte der Wave-Dateien im RAM zum Plotten (nicht die erste, weil die RMS-Schleife mit der letzten Wave-Datei aufhört und diese zum Plotten weitergegeben wird. 
-info = audioinfo(Pathname_and_Filename(channelcnt,:));          %Infos über die Audiodaten lesen
-bits = info.BitsPerSample;
-Fs = info.SampleRate;
-segmentcount = floor(info.TotalSamples/rmssegmentlen);          %Berechnet die Anzahl möglicher Segmente der Audio-Dateien
+
+if verLessThan ('matlab','8.1.0.604') %Matlabversionen Vergleich
+    [audio_1, Fs, bits] = wavread(Pathname_and_Filename(channelcnt,:));
+    segmentcount = floor(length(audio_1)/rmssegmentlen);
+else
+    audio_1 = audioread(Pathname_and_Filename(channelcnt,:));       %wir halten nur die letzte der Wave-Dateien im RAM zum Plotten (nicht die erste, weil die RMS-Schleife mit der letzten Wave-Datei aufhört und diese zum Plotten weitergegeben wird. 
+        info = audioinfo(Pathname_and_Filename(channelcnt,:));          %Infos über die Audiodaten lesen
+        bits = info.BitsPerSample;
+        Fs = info.SampleRate;
+        segmentcount = floor(info.TotalSamples/rmssegmentlen);          %Berechnet die Anzahl möglicher Segmente der Audio-Dateien
+end
+
+
+
 t = 0:2*pi/31:(2*pi);                                           %wird für die Polarbefehle benötigt
 rumfummel_begrenzung = ones(1,32); %Quick&Dirty-Implementierung eines zweiten Polar-Kreises, der die Skalierung für unsere richtungs- und frequenzabhängigen RMS-Werte vorschreibt
 
@@ -47,10 +56,18 @@ for j = 1:segmentcount %%% Segment-Schleife %%%
     
     %%% RMS-Schleife %%%
     for i = 1:channelcnt 
-        [audioin] = audioread(Pathname_and_Filename(i,:),[segment_start,segment_end]); % das aktuelle Audiosegment wird in "audioin" geschrieben
+        
+        if verLessThan ('matlab','8.1.0.604') %Matlabversionen Vergleich
+            [audioin] = wavread(Pathname_and_Filename(i,:),[segment_start,segment_end]); % das aktuelle Audiosegment wird in "audioin" geschrieben
+           else
+                [audioin] = audioread(Pathname_and_Filename(i,:),[segment_start,segment_end]); % das aktuelle Audiosegment wird in "audioin" geschrieben
+        
+        end
+        
+        
         [fft_rms_multichannel(:,i),freq_band] = fft_band_multiple_rms_analysis(audioin,Fs,resolution,freq_start,freq_end); % audioin wird in mehrere Frequenzbänder zerlegt und für jedes Band der RMS bestimmt
-        [rms_global(:,i)] = rms(audioin);   %Jakob&Eric haben diesen Aufruf samt erneutem Audioread in eine gesonderte Schleife geschrieben. In kompakter Form jetzt hier als Einzeiler.
-        %[rms_global(:,i)] = rms_multiband(audioin); % benötigt MATLAB neural network toolbox
+        %[rms_global(:,i)] = rms(audioin);   %Jakob&Eric haben diesen Aufruf samt erneutem Audioread in eine gesonderte Schleife geschrieben. In kompakter Form jetzt hier als Einzeiler.
+        [rms_global(:,i)] = rms_multiband(audioin); % benötigt MATLAB neural network toolbox
     end
     i = 1;
     

@@ -15,7 +15,14 @@ channelcnt = length(FileName); % Kanalanzahl automatisch ermittlen
 % save('FileName.mat','FileName');
 % save('Pathname_and_Filename.mat','Pathname_and_Filename');
 
-[audioin,Fs] = audioread(Pathname_and_Filename(1,:));
+
+if verLessThan ('matlab','8.1.0.604') %Matlabversionen Vergleich
+            [audioin,Fs] = wavread(Pathname_and_Filename(1,:));
+        else
+            [audioin,Fs] = audioread(Pathname_and_Filename(1,:));
+end
+
+
 dc_offset_filter_objects = fdesign.highpass('N,F3db',40,10/Fs);
 dc_offset_filter = design(dc_offset_filter_objects,'butter');
 
