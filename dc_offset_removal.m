@@ -2,8 +2,8 @@
 %%% DC Offset Removal %%%
 %%%%%%%%%%%%%%%%%%%%%%%%%
 % Das Entfernen des DC Offsets sollte nicht in den einzelnen Segmenten
-% gemacht werden, sondern vorher. D.h., alle geladenen Wave-Files müssen
-% komplett gespeichert werden (unnötige Last und Speicherbedarf). Aus
+% gemacht werden, sondern vorher. D.h., alle geladenen Wave-Files muessen
+% komplett gespeichert werden (unnoetige Last und Speicherbedarf). Aus
 % diesem Grund 
 
 clear all;

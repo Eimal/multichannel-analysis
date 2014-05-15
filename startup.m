@@ -1,4 +1,4 @@
-feature('DefaultCharacterSet','UTF8');
+%feature('DefaultCharacterSet','UTF8');
 if isunix == 1
 	cd(strrep(userpath, ':', ''));
 end

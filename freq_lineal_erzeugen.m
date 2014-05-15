@@ -1,8 +1,8 @@
 %### Erzeugen eines Frequenzraster ###
-%### Auswahl Terz oder Oktaveraster möglich
+%### Auswahl Terz oder Oktaveraster moeglich
 
 function [freq_band,freq_band_border] = freq_lineal_erzeugen(resolution,freq_start,freq_end)
-%%%% Die Variablen nicht mehr benötigt, da sie in der Funktion übergeben
+%%%% Die Variablen nicht mehr benoetigt, da sie in der Funktion uebergeben
 %%%% werden! 
 % Frequenzbereich definieren - Raster erzeugen
 % clear all
@@ -10,13 +10,13 @@ function [freq_band,freq_band_border] = freq_lineal_erzeugen(resolution,freq_sta
 % freq_start = 62.5;   % untere Begrenzung des zu analysierenden Spektrums
 % freq_end = 16000;    % obere Begrenzung
 
-%%%%wenn "resolution" dieser Funktion hier übergeben wird, brauchen wir das nicht zu überschreiben%%%% 
-% resolution = 1;              % 3 für Terzband, 2 für Oktavband
+%%%%wenn "resolution" dieser Funktion hier uebergeben wird, brauchen wir das nicht zu ueberschreiben%%%% 
+% resolution = 1;              % 3 fuer Terzband, 2 fuer Oktavband
 
 switch resolution;
 	case 1;
-        freq_band_factor = 2;              % Faktor zur Bestimmung der mid-frequenzen für oktavband
-        freq_band_border_factor = sqrt(2); % Faktor zur Bestimmung der grenz-frequenzen für Oktavband
+        freq_band_factor = 2;              % Faktor zur Bestimmung der mid-frequenzen fuer oktavband
+        freq_band_border_factor = sqrt(2); % Faktor zur Bestimmung der grenz-frequenzen fuer Oktavband
 	case 2
         freq_band_factor = nthroot(2,3);
         freq_band_border_factor = nthroot(2,6);
@@ -35,6 +35,6 @@ while freq_start < freq_end_border;
     freq_start = freq_band(freq_band_index);
     freq_band_index = freq_band_index + 1;
 end
-freq_band(freq_band_index-1) = []; %lösche den letzten Wert, der nur entsteht, weil wir einen Index für freq_band_border mehr brauchen
+freq_band(freq_band_index-1) = []; %loesche den letzten Wert, der nur entsteht, weil wir einen Index fuer freq_band_border mehr brauchen
 clear freq_band_index;
 clear resolution;
