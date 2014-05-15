@@ -1,3 +1,8 @@
 feature('DefaultCharacterSet','UTF8');
-cd(strrep(userpath, ':', ''));
+if isunix == 1
+	cd(strrep(userpath, ':', ''));
+end
+if ispc == 1
+	cd(strrep(userpath, ';', ''));
+end
 clear all;
