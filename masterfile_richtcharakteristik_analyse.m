@@ -8,11 +8,6 @@
 % array (channelcnt) and the number of samples used for the rms-estimation (rmssegmentlen).
 % The script generates a polar-plot using the data from the channelcnt-wav-files for each rmssegment.
 
-% to do :   ECHTE RMS BESTIMMUNG als Funktion (rms_a())
-%           AMPLITUDENSKALIERUNG AUF db (z.B. FS = 0 dB)
-%           SPEKTRALE ZERLEGUNG MIT FILTERN z.B 15-31-62-125-250-1k-2k-4k-8k-16k-32k  = 10 Filter 
-%           SPEKTRALE ZERLEGUNG MIT FFT
-
 clear all; 
 close all;
 
