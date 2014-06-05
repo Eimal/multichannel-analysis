@@ -89,7 +89,6 @@ for j = 1:segmentcount %%% Segment-Schleife %%%
 
     %Polardiagramm des gesamten Spektrums %%Jakob&Eric haben den folgenden Block in einer nested-Schleife geschrieben. In kompakter Form jetzt an der allgemeinen Plot-Stelle. 
     subplot(4,5,5);                     %Bei einer 4x5 Tabelle wird die folgende Grafik auf Zelle #5 geplottet
-    %polar(t,rms_global(1,:), '-k');     %Dieser Kreis gibt die Skalierung vor. Das ist ein ziemliches Rumgefummel. Unter mit 0.4 und 0.3 funktioniert der Trick nicht. Wir muessen eine bessere Loesung finden. 
     polar(t,rms_global(1,:));           %macht visualisierung
     hold on;                            %Haelt den oberen Kreis fest, damit die SKalierung gleich bleibt
     title(['Global Polar'],'color','r');
@@ -106,14 +105,9 @@ for j = 1:segmentcount %%% Segment-Schleife %%%
     
     %%% Polardiagram-Schleife %%%
     for k = 1:size(fft_rms_multichannel) 
-        %Polardiagramme aller Frequenzbaender 
-        subplot(4,5,(10+k));
+        subplot(4,5,(10+k)); %Polardiagramme aller Frequenzbaender 
         polar(t,rumfummel_begrenzung(1,:),'-r'); %-dB Dieser Kreis gibt die Skalierung vor. Das ist ein ziemliches Rumgefummel. Unter mit 0.4 und 0.3 funktioniert der Trick nicht. Wir muessen eine bessere Loesung finden. 
-%dB     polar(0,160,'-g') %%%% temporaerer Ersatz fuer die Zeile darueber %%% 160 anpassen 
-        %plot(plot:Polar([1, u], u = 0..2*PI)); %mit MuPad?
-%dB         hold on;                                %Haelt den oberen Kreis fest, damit die SKalierung gleich bleibt
         polar(t,fft_rms_multichannel(k,:));  %-dB macht visualisierung
-%dB     %polar(t,96+fft_rms_multichannel(k,:));  %%%%96 anpassen (OFFSET, UM DBFS BESTMoeGLICH DARSTELLEN ZU KoeNNEN. DURCH DIESEN WORKAROUND WERDEN ALLE DIAGRAMME UM 180° GEDREHT DARGESTELLT -> MIT TESTSIGNALEN ueBERPRueFEN!! TODO        %macht visualisierung
         title([num2str(freq_band(k)),' Hz'],'color','r'); %benennt die einzelnen Polardiagramme nach ihren entsprechenden Mittenfrequenzen 'freq_band'
     end
     k = 1;
