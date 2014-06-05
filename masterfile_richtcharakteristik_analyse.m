@@ -70,7 +70,7 @@ for j = 1:segmentcount %%% Segment-Schleife %%%
         if neural_network_toolbox == 1 %%% Je nachdem, welche Tools installiert sind, wird RMS ueber die folgenden Befehle ermittelt %%%
             [rms_global(:,i)] = rms_multiband(audioin); % benoetigt MATLAB neural network toolbox
         elseif signal_processing_toolbox == 1
-            [rms_global(:,i)] = rms(audioin);   %Jakob&Eric haben diesen Aufruf samt erneutem Audioread in eine gesonderte Schleife geschrieben. In kompakter Form jetzt hier als Einzeiler.
+            [rms_global(:,i)] = rms(audioin);
         end
     end
     if i == channelcnt %die Werte  von 0 Grad = 360 Grad. Damt die polar-Funktion das kapiert, muessen wir den Wert von 0 Grad nach 360 Grad kopieren, d.h. einen neuen letzten Wert in die Arrays vom jeweiligen ersten kopieren
@@ -91,10 +91,10 @@ for j = 1:segmentcount %%% Segment-Schleife %%%
 %     plot(audioin);                                              %Plottet das aktuelle Segment
 %     title(['Segment #',num2str(j)],'color','r','Interpreter','none');
 
-    %Polardiagramm des gesamten Spektrums %%Jakob&Eric haben den folgenden Block in einer nested-Schleife geschrieben. In kompakter Form jetzt an der allgemeinen Plot-Stelle. 
+    %Polardiagramm des gesamten Spektrums
     subplot(4,5,5);                     %Bei einer 4x5 Tabelle wird die folgende Grafik auf Zelle #5 geplottet
     polar(t,rms_global(1,:));           %macht visualisierung
-    hold on;                            %Haelt den oberen Kreis fest, damit die SKalierung gleich bleibt
+    hold on;                            %Haelt den oberen Kreis fest, damit die Skalierung gleich bleibt
     title(['Global Polar'],'color','r');
     
     %Spektrogramm (von Hobohms Skript%
