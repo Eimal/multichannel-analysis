@@ -7,7 +7,7 @@ stationäre Plots aus der Schleife auslagern
 AMPLITUDENSKALIERUNG AUF db (z.B. FS = 0 dB)
 SPEKTRALE ZERLEGUNG MIT FILTERN z.B 15-31-62-125-250-1k-2k-4k-8k-16k-32k  = 10 Filter 
 x 33te channelcnt+1 im Richtdiagramm -> Kopie von 0°
-Verwendung von fftw statt fft
+Verwendung von fftw lässt sich der Befehl fft beschleunigen
 Speichern der Analyseergebnisse in mat-files -> Beschleunigung des Skripts
 Nicht nur vorwärts steppen, sondern auch rückwärts steppen
 Visualisierung "Directivity Sonogram"
