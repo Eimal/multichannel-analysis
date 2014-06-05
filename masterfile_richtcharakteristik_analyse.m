@@ -51,8 +51,8 @@ end
 
 
 
-t = 0:2*pi/(channelcnt-1):(2*pi);               %wird fuer die Polarbefehle benoetigt
-rumfummel_begrenzung = ones(1,channelcnt);      %zweiter Polar-Kreis, der die Skalierung fuer unsere richtungs- und frequenzabhaengigen RMS-Werte vorschreibt
+t = 0:2*pi/(channelcnt):(2*pi);               %wird fuer die Polarbefehle benoetigt
+rumfummel_begrenzung = ones(1,channelcnt+1);      %zweiter Polar-Kreis, der die Skalierung fuer unsere richtungs- und frequenzabhaengigen RMS-Werte vorschreibt
 
 for j = 1:segmentcount %%% Segment-Schleife %%%
     clf; %reset aller Plots
@@ -72,6 +72,10 @@ for j = 1:segmentcount %%% Segment-Schleife %%%
         elseif signal_processing_toolbox == 1
             [rms_global(:,i)] = rms(audioin);   %Jakob&Eric haben diesen Aufruf samt erneutem Audioread in eine gesonderte Schleife geschrieben. In kompakter Form jetzt hier als Einzeiler.
         end
+    end
+    if i == channelcnt %die Werte  von 0 Grad = 360 Grad. Damt die polar-Funktion das kapiert, muessen wir den Wert von 0 Grad nach 360 Grad kopieren, d.h. einen neuen letzten Wert in die Arrays vom jeweiligen ersten kopieren
+        fft_rms_multichannel(:,i+1) = fft_rms_multichannel(:,1);
+        rms_global(:,i+1) = rms_global(:,1);
     end
     i = 1;
     
