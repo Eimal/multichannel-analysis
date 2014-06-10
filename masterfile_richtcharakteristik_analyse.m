@@ -49,15 +49,24 @@ else
         segmentcount = floor(info.TotalSamples/rmssegmentlen);          %Berechnet die Anzahl moeglicher Segmente der Audio-Dateien
 end
 
-
-
 t = 0:2*pi/(channelcnt):(2*pi);               %wird fuer die Polarbefehle benoetigt
 rumfummel_begrenzung = ones(1,channelcnt+1);      %zweiter Polar-Kreis, der die Skalierung fuer unsere richtungs- und frequenzabhaengigen RMS-Werte vorschreibt
 
+save_segments = ones(segmentcount,1);
+
 for j = 1:segmentcount %%% Segment-Schleife %%%
-    clf; %reset aller Plots
+h = waitbar(j/segmentcount);
     segment_start = ((j*rmssegmentlen)+1)-rmssegmentlen;
     segment_end = j*rmssegmentlen;
+    
+    % save_segments vector erzeugen, er enthält die grenzen der segmente
+    % für spätere visualisierung - wird unten gespeichert
+    
+    if j == 1
+        save_segments(j) = segment_start;
+    else
+        save_segments(j) = segment_end;
+    end
     
     %%% RMS-Schleife %%%
     for i = 1:channelcnt 
@@ -77,45 +86,27 @@ for j = 1:segmentcount %%% Segment-Schleife %%%
         fft_rms_multichannel(:,i+1) = fft_rms_multichannel(:,1);
         rms_global(:,i+1) = rms_global(:,1);
     end
-    i = 1;
-    
-    %%% Plotten %%%
-    subplot(4,5,[1 4]);                                         %Platzierung der folgenden Zeile an oberster Stelle, mit einer Breite von 1-4 (von maximal 5)
-    plot(audio_1,'b');                                          %Plottet die letzte der ausgewaehlten Wave-Dateien
-    hold on;
-    redplot = zeros(size(audio_1));                             %Erstellt den Vektor fuer die rote Markierung des aktuellene Segments. Der Vektor muss genau so gross sein wie die erste Wave-Datei
-    redplot(segment_start:segment_end) = audioin;               %Schriebt in den Vektor fuer die rote Markierung die Werte des aktuellen Segments. 
-    plot(redplot,'r');                                          %Plottet das aktuelle Segment rot
-    title(fileList(1,1), 'color','r','Interpreter','none');
-%     subplot(4,1,2);                                             %Platziert die folgende Zeile an zweiter Stelle
-%     plot(audioin);                                              %Plottet das aktuelle Segment
-%     title(['Segment #',num2str(j)],'color','r','Interpreter','none');
-
-    %Polardiagramm des gesamten Spektrums
-    subplot(4,5,5);                     %Bei einer 4x5 Tabelle wird die folgende Grafik auf Zelle #5 geplottet
-    polar(t,rms_global(1,:));           %macht visualisierung
-    hold on;                            %Haelt den oberen Kreis fest, damit die Skalierung gleich bleibt
-    title(['Global Polar'],'color','r');
-    
-    %Spektrogramm (von Hobohms Skript%
-    subplot(4,1,2); % data of channel 31 is used
     if j == 1
-        [Y,F,T,P] = spectrogram(audio_1,1024,576);%draw filtered spectrogram: noch fehlerhaft
+        save_polar_global = ones(segmentcount,(length(rms_global)));
+        save_polar_global(j,:) = rms_global;
+    else
+        save_polar_global(j,:) = rms_global;
     end
-    surf(T,F,10*log10(abs(P)),'EdgeColor','none');
-    axis xy; axis tight; view(0,90); %Drehung der Zeitachse um 90%
-    colorbar('location','eastoutside');
-    rumfummel_begrenzung(1,:) = 1.2*max(max(fft_rms_multichannel,[],2));    %findet das Maximum aus jeder Zeile des RMS Arrays und findet davon das Maximum 8-) -> wir legen den aeusseren Rumfummelkreis fest
     
-    %%% Polardiagram-Schleife %%%
-    for k = 1:size(fft_rms_multichannel) 
-        subplot(4,5,(10+k)); %Polardiagramme aller Frequenzbaender 
-        polar(t,rumfummel_begrenzung(1,:),'-r'); %-dB Dieser Kreis gibt die Skalierung vor. Das ist ein ziemliches Rumgefummel. Unter mit 0.4 und 0.3 funktioniert der Trick nicht. Wir muessen eine bessere Loesung finden. 
-        polar(t,fft_rms_multichannel(k,:));  %-dB macht visualisierung
-        title([num2str(freq_band(k)),' Hz'],'color','r'); %benennt die einzelnen Polardiagramme nach ihren entsprechenden Mittenfrequenzen 'freq_band'
-    end
-    k = 1;
+ 
+ 
+    
+    i = 1;
 
-pause()
 end
-break
+
+%####### Dateien Speichern #######
+save('saved_files/polar_global.mat','save_polar_global') % rms daten global
+save('saved_files/polar_band.mat','fft_rms_multichannel') % rms-daten multichannel
+save('saved_files/audio_ref.mat','audio_1') % audioreference
+save('saved_files/fileList.mat','fileList') % Filenames für bestimmung von channelcount und benennung (später)
+save('saved_files/segments.mat','save_segments')% segmentbegrenzungen speichern
+
+%####### Fertig anzeigen und Progressbar schließen #####
+close(h)
+msgbox('Analysis done!','finished!','help')
