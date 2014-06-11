@@ -101,7 +101,8 @@ h = waitbar(j/segmentcount);
 end
 
 %####### Dateien Speichern #######
-save('saved_files/analysis.mat','save_polar_global','fft_rms_multichannel','audio_1','fileList','save_segments','freq_band') % rms daten global
+analysis_save = strcat(char(dirName),'/','analysis.mat');
+save(analysis_save,'save_polar_global','fft_rms_multichannel','audio_1','fileList','save_segments','freq_band') % rms daten global
 
 %####### Fertig anzeigen und Progressbar schliesen #####
 close(h)

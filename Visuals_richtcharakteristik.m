@@ -11,7 +11,9 @@ close all;
 
 
 % Laden der Daten aus dem skript "masterfile....mat"
-load('saved_files/analysis.mat')
+[analysis_FileName,analysis_PathName] = uigetfile;
+analysis_file = strcat(analysis_PathName,analysis_FileName);
+load(analysis_file);
 
 
 channelcnt = length(fileList);                  % Kanalanzahl automatisch ermittlen
