@@ -101,11 +101,7 @@ h = waitbar(j/segmentcount);
 end
 
 %####### Dateien Speichern #######
-save('saved_files/polar_global.mat','save_polar_global') % rms daten global
-save('saved_files/polar_band.mat','fft_rms_multichannel') % rms-daten multichannel
-save('saved_files/audio_ref.mat','audio_1') % audioreference
-save('saved_files/fileList.mat','fileList') % Filenames fuer bestimmung von channelcount und benennung (spaeter)
-save('saved_files/segments.mat','save_segments')% segmentbegrenzungen speichern
+save('saved_files/analysis.mat','save_polar_global','fft_rms_multichannel','audio_1','fileList','save_segments','freq_band') % rms daten global
 
 %####### Fertig anzeigen und Progressbar schliesen #####
 close(h)

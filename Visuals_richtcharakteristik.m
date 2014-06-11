@@ -11,11 +11,7 @@ close all;
 
 
 % Laden der Daten aus dem skript "masterfile....mat"
-load('saved_files/audio_ref.mat')
-load('saved_files/polar_band.mat')
-load('saved_files/polar_global.mat')
-load('saved_files/segments.mat')
-load('saved_files/fileList.mat')
+load('saved_files/analysis.mat')
 
 
 channelcnt = length(fileList);                  % Kanalanzahl automatisch ermittlen
