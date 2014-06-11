@@ -5,8 +5,8 @@ close all;
 
 % ##### TODO #### %
 % Benennung der Diagramme aus fileList implementieren
-% GUI entwickeln - vor und zurück steppen derzeit nur via prompt in Command
-% Window möglich
+% GUI entwickeln - vor und zurueck steppen derzeit nur via prompt in Command
+% Window moeglich
 
 
 
@@ -66,7 +66,7 @@ rumfummel_begrenzung = ones(1,channelcnt+1);     %zweiter Polar-Kreis, der die S
         % title([num2str(freq_band(k)),' Hz'],'color','r'); %benennt die einzelnen Polardiagramme nach ihren entsprechenden Mittenfrequenzen 'freq_band'
     end
     k = 1;
-    factor = input('wie viele schritte vor (+1) oder zurück (-1) ? - keine Eingabe (Enter) = Ende')
+    factor = input('wie viele schritte vor (+1) oder zurueck (-1) ? - keine Eingabe (Enter) = Ende')
     
    j = j + factor
     end
