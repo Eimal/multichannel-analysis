@@ -59,8 +59,8 @@ h = waitbar(j/segmentcount);
     segment_start = ((j*rmssegmentlen)+1)-rmssegmentlen;
     segment_end = j*rmssegmentlen;
     
-    % save_segments vector erzeugen, er enthält die grenzen der segmente
-    % für spätere visualisierung - wird unten gespeichert
+    % save_segments vector erzeugen, er enthaelt die grenzen der segmente
+    % fuer spaetere visualisierung - wird unten gespeichert
     
     if j == 1
         save_segments(j) = segment_start;
@@ -118,9 +118,9 @@ end
 save('saved_files/polar_global.mat','save_polar_global') % rms daten global
 save('saved_files/polar_band.mat','save_fft_rms_multichannel') % rms-daten multichannel
 save('saved_files/audio_ref.mat','audio_1') % audioreference
-save('saved_files/fileList.mat','fileList') % Filenames für bestimmung von channelcount und benennung (später)
+save('saved_files/fileList.mat','fileList') % Filenames fuer bestimmung von channelcount und benennung (spaeter)
 save('saved_files/segments.mat','save_segments')% segmentbegrenzungen speichern
 
-%####### Fertig anzeigen und Progressbar schließen #####
+%####### Fertig anzeigen und Progressbar schliesen #####
 close(h)
 msgbox('Analysis done!','finished!','help')

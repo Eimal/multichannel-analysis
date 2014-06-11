@@ -1,1 +1,13 @@
 *.asv
+*.mat
+*.mat
+
+saved_files/fileList.mat
+
+saved_files/audio_ref.mat
+
+saved_files/polar_band.mat
+
+saved_files/polar_global.mat
+
+saved_files/segments.mat
