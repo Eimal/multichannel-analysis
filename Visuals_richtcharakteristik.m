@@ -57,12 +57,12 @@ rumfummel_begrenzung = ones(1,channelcnt+1);     %zweiter Polar-Kreis, der die S
     surf(T,F,10*log10(abs(P)),'EdgeColor','none');
     axis xy; axis tight; view(0,90); %Drehung der Zeitachse um 90%
     colorbar('location','eastoutside');
-    rumfummel_begrenzung(1,:) = 1.2*max(max(fft_rms_multichannel(:,:,j),[],2));    %findet das Maximum aus jeder Zeile des RMS Arrays und findet davon das Maximum 8-) -> wir legen den aeusseren Rumfummelkreis fest
+    rumfummel_begrenzung(1,:) = 1.2*max(max(save_fft_rms_multichannel(:,:,j),[],2));    %findet das Maximum aus jeder Zeile des RMS Arrays und findet davon das Maximum 8-) -> wir legen den aeusseren Rumfummelkreis fest
     %%% Polardiagram-Schleife %%%
-    for k = 1:size(fft_rms_multichannel(:,:,j)) 
+    for k = 1:size(save_fft_rms_multichannel(:,:,j)) 
         subplot(4,5,(10+k)); %Polardiagramme aller Frequenzbaender 
         polar(t,rumfummel_begrenzung(1,:),'-r'); %-dB Dieser Kreis gibt die Skalierung vor. Das ist ein ziemliches Rumgefummel. Unter mit 0.4 und 0.3 funktioniert der Trick nicht. Wir muessen eine bessere Loesung finden. 
-        polar(t,fft_rms_multichannel(k,:,j));  %-dB macht visualisierung
+        polar(t,save_fft_rms_multichannel(k,:,j));  %-dB macht visualisierung
         % title([num2str(freq_band(k)),' Hz'],'color','r'); %benennt die einzelnen Polardiagramme nach ihren entsprechenden Mittenfrequenzen 'freq_band'
     end
     k = 1;
