@@ -81,19 +81,33 @@ h = waitbar(j/segmentcount);
         elseif signal_processing_toolbox == 1
             [rms_global(:,i)] = rms(audioin);
         end
+        
+ 
     end
     if i == channelcnt %die Werte  von 0 Grad = 360 Grad. Damt die polar-Funktion das kapiert, muessen wir den Wert von 0 Grad nach 360 Grad kopieren, d.h. einen neuen letzten Wert in die Arrays vom jeweiligen ersten kopieren
         fft_rms_multichannel(:,i+1) = fft_rms_multichannel(:,1);
         rms_global(:,i+1) = rms_global(:,1);
     end
+    
+    % speicherbereich reservieren und speichern f�r globale und
+    % fft-diferenzierte rms-werte
+    
     if j == 1
+        size_fftrmsmultichannel = size(fft_rms_multichannel);
+        save_fft_rms_multichannel(:,:,segmentcount) = fft_rms_multichannel;
+        
+        save_fft_rms_multichannel(:,:,j) = fft_rms_multichannel;
+        
         save_polar_global = ones(segmentcount,(length(rms_global)));
         save_polar_global(j,:) = rms_global;
     else
         save_polar_global(j,:) = rms_global;
+        save_polar_global = ones(segmentcount,(length(rms_global)));
+        
+        save_fft_rms_multichannel(:,:,j) = fft_rms_multichannel;
     end
     
- 
+% save_fft_rms_multichan
  
     
     i = 1;
@@ -102,7 +116,7 @@ end
 
 %####### Dateien Speichern #######
 analysis_save = strcat(char(dirName),'/','analysis.mat');
-save(analysis_save,'save_polar_global','fft_rms_multichannel','audio_1','fileList','save_segments','freq_band') % rms daten global
+save(analysis_save,'save_polar_global','save_fft_rms_multichannel','audio_1','fileList','save_segments','freq_band') % rms daten global
 
 %####### Fertig anzeigen und Progressbar schliesen #####
 close(h)
