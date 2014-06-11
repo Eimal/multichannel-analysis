@@ -1,20 +1,25 @@
 % Audio einlesen, Filtern und Speichern
 
-% clear all;
-% close all;
+%%%%%%%%%%%%%%
+%Einkommentieren, falls eigenstaendiges Skript
+%%%%%%%%%%%%%%
+%clear all;
+%close all;
+%[filenameWavR,pathnameWavR]=uigetfile('*.wav','Audio-Datei auswaehlen');
+%[audioin,fs,bits]=wavread([pathnameWavR filenameWavR]);
+%resolution = 2; % Terzauflösung
+%freq_start = 62.5;   % untere Begrenzung des zu analysierenden Spektrums
+%freq_end = 16000;    % obere Begrenzung
 
-% Audio einlesen
-
-% [filenameWavR,pathnameWavR]=uigetfile('*.wav','Audio-Datei auswaehlen');
-% [audioin,fs,bits]=wavread([pathnameWavR filenameWavR]);
-
+%%%%%%%%%%%%%%
+%Programmbeginn
+%%%%%%%%%%%%%%
 function [fft_bands_section_rms,freq_band] = fft_band_multiple_rms_analysis(audioin,fs,resolution,freq_start,freq_end) %; semicolon not necessary
-
+str=0;
 audio_end = length(audioin);
 
 fft_points = 4096; %%Verbessern!!
 fft_bandwith = fs / fft_points;
-
 %%% Variablen fuer die Produkterkennung von Matlab
 neural_network_toolbox = 0;
 signal_processing_toolbox = 0;
@@ -24,11 +29,6 @@ end
 if ver_product('Signal Processing Toolbox') == 1
     signal_processing_toolbox = 1;
 end
-
-%%%Durch uebergabe in Funktion auskommentiert%%% 
-% resolution = 1; % 1 fuer Oktav, 2 fuer Terzband
-% freq_start = 62.5;   % untere Begrenzung des zu analysierenden Spektrums
-% freq_end = 16000;    % obere Begrenzung
 
 [freq_band,freq_band_border] = freq_lineal_erzeugen(resolution,freq_start,freq_end);
 length_freq_grenz = length(freq_band_border);
@@ -44,12 +44,25 @@ k = 1;
 j = 1;
 fft_bands_index = 1;
 fft_bands_section_rms = ones(1,length_freq_mid);
-
+        
+% if str == 0                         %%%%%
+%      fftw('planner', 'hybrid');     %Optimierung der FFT-Geschwindigkeit
+%      str = fftw('dwisdom');         %%%%%
+%      
+%      else
+%          
+%      end
+   
 while k < audio_end;
     fft_in = audio_passend(k:(k+(fft_points-1)));
     k = k + fft_points;
-    fft_bands_all = (1/fft_points).*abs(fft(fft_in));
+    fft_bands_all = (1/fft_points).*abs(fft(fft_in)); 
     % magnitude_y = abs(fft_bands_all);
+    
+%     if str==0				%%%%%%%%%%%%%
+%         str = fftw('dwisdom');	%Optimierung der FFT-Geschwindigkeit
+%     else				%%%%%%%%%%%%%
+%     end
     
     while j < length_freq_grenz;
     freq_sector_grenz = freq_band_border(j+1)-freq_band_border(j);
@@ -70,6 +83,7 @@ while k < audio_end;
 	fft_bands_index = fft_bands_index_end+1;
     end
 end
+
 clear j;
 clear k;
 
