@@ -44,7 +44,7 @@ rumfummel_begrenzung = ones(1,channelcnt+1);     %zweiter Polar-Kreis, der die S
 
     %Polardiagramm des gesamten Spektrums
     subplot(4,5,5);                     %Bei einer 4x5 Tabelle wird die folgende Grafik auf Zelle #5 geplottet
-    polar(t,save_polar_global(1,:));           %macht visualisierung
+    polar(t,save_polar_global(1,:));    %macht visualisierung
     hold on;                            %Haelt den oberen Kreis fest, damit die Skalierung gleich bleibt
     title(['Global Polar'],'color','r');
     
@@ -66,5 +66,5 @@ rumfummel_begrenzung = ones(1,channelcnt+1);     %zweiter Polar-Kreis, der die S
     end
     k = 1;
     factor = input('wie viele schritte vor (+1) oder zurueck (-1) ? - keine Eingabe (Enter) = Ende')
-   j = j + factor
+    j = j + factor
     end
