@@ -25,6 +25,7 @@ rumfummel_begrenzung = ones(1,channelcnt+1);     %zweiter Polar-Kreis, der die S
     
     j = 1;
     start = 1;
+    rumfummel_begrenzung(1:channelcnt+1) = max(max(max(save_fft_rms_multichannel(:,:,:),[],2)));     %findet das Maximum aus jeder Zeile des RMS Arrays und findet davon das Maximum 8-) -> wir legen den aeusseren Rumfummelkreis fest
     
     while j == j
     audioin = audio_1(save_segments(j):save_segments(j+1));
@@ -55,16 +56,15 @@ rumfummel_begrenzung = ones(1,channelcnt+1);     %zweiter Polar-Kreis, der die S
     surf(T,F,10*log10(abs(P)),'EdgeColor','none');
     axis xy; axis tight; view(0,90); %Drehung der Zeitachse um 90%
     colorbar('location','eastoutside');
-    rumfummel_begrenzung(1,:) = 1.2*max(max(save_fft_rms_multichannel(:,:,j),[],2));    %findet das Maximum aus jeder Zeile des RMS Arrays und findet davon das Maximum 8-) -> wir legen den aeusseren Rumfummelkreis fest
     %%% Polardiagram-Schleife %%%
     for k = 1:size(save_fft_rms_multichannel(:,:,j)) 
         subplot(4,5,(10+k)); %Polardiagramme aller Frequenzbaender 
-        polar(t,rumfummel_begrenzung(1,:),'-r'); %-dB Dieser Kreis gibt die Skalierung vor. Das ist ein ziemliches Rumgefummel. Unter mit 0.4 und 0.3 funktioniert der Trick nicht. Wir muessen eine bessere Loesung finden. 
+        polar(t,rumfummel_begrenzung,'-w'); %-dB Dieser Kreis gibt die Skalierung vor. Das ist ein ziemliches Rumgefummel. Unter mit 0.4 und 0.3 funktioniert der Trick nicht. Wir muessen eine bessere Loesung finden. 
+        hold on;
         polar(t,save_fft_rms_multichannel(k,:,j));  %-dB macht visualisierung
         % title([num2str(freq_band(k)),' Hz'],'color','r'); %benennt die einzelnen Polardiagramme nach ihren entsprechenden Mittenfrequenzen 'freq_band'
     end
     k = 1;
     factor = input('wie viele schritte vor (+1) oder zurueck (-1) ? - keine Eingabe (Enter) = Ende')
-    
    j = j + factor
     end
