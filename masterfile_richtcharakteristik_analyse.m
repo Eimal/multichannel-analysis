@@ -102,7 +102,7 @@ h = waitbar(j/segmentcount);
         save_polar_global(j,:) = rms_global;
     else
         save_polar_global(j,:) = rms_global;
-        save_polar_global = ones(segmentcount,(length(rms_global)));
+        %save_polar_global = ones(segmentcount,(length(rms_global)));
         
         save_fft_rms_multichannel(:,:,j) = fft_rms_multichannel;
     end
