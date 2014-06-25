@@ -18,14 +18,15 @@ load(analysis_file);
 
 channelcnt = length(fileList);                  % Kanalanzahl automatisch ermittlen
 t = 0:2*pi/(channelcnt):(2*pi);                 %wird fuer die Polarbefehle benoetigt
-rumfummel_begrenzung = ones(1,channelcnt+1);     %zweiter Polar-Kreis, der die Skalierung fuer unsere richtungs- und frequenzabhaengigen RMS-Werte vorschreibt
+polar_scale_fft = ones(1,channelcnt+1);     %zweiter Polar-Kreis, der die Skalierung fuer unsere richtungs- und frequenzabhaengigen RMS-Werte vorschreibt
 
     %%% Plotten %%%
     
     
     j = 1;
     start = 1;
-    rumfummel_begrenzung(1:channelcnt+1) = max(max(max(save_fft_rms_multichannel(:,:,:),[],2)));     %findet das Maximum aus jeder Zeile des RMS Arrays und findet davon das Maximum 8-) -> wir legen den aeusseren Rumfummelkreis fest
+    polar_scale_fft(1:channelcnt+1) = max(max(max(save_fft_rms_multichannel(:,:,:),[],2)));     %findet das Maximum aus jeder Zeile des RMS Arrays und findet davon das Maximum 8-) -> wir legen den aeusseren Rumfummelkreis fest
+    polar_scale_global(1:channelcnt+1) = max(max(save_polar_global));
     
     while j == j
     audioin = audio_1(save_segments(j):save_segments(j+1));
@@ -44,8 +45,9 @@ rumfummel_begrenzung = ones(1,channelcnt+1);     %zweiter Polar-Kreis, der die S
 
     %Polardiagramm des gesamten Spektrums
     subplot(4,5,5);                     %Bei einer 4x5 Tabelle wird die folgende Grafik auf Zelle #5 geplottet
-    polar(t,save_polar_global(1,:));    %macht visualisierung
+    polar(t,polar_scale_global,'-w');   %gibt maximale Skalierung vor
     hold on;                            %Haelt den oberen Kreis fest, damit die Skalierung gleich bleibt
+    polar(t,save_polar_global(j,:));    %macht visualisierung
     title(['Global Polar'],'color','r');
     
     %Spektrogramm (von Hobohms Skript%
@@ -59,12 +61,13 @@ rumfummel_begrenzung = ones(1,channelcnt+1);     %zweiter Polar-Kreis, der die S
     %%% Polardiagram-Schleife %%%
     for k = 1:size(save_fft_rms_multichannel(:,:,j)) 
         subplot(4,5,(10+k)); %Polardiagramme aller Frequenzbaender 
-        polar(t,rumfummel_begrenzung,'-w'); %-dB Dieser Kreis gibt die Skalierung vor. Das ist ein ziemliches Rumgefummel. Unter mit 0.4 und 0.3 funktioniert der Trick nicht. Wir muessen eine bessere Loesung finden. 
+        polar(t,polar_scale_fft,'-w'); %-dB Dieser Kreis gibt die Skalierung vor. Das ist ein ziemliches Rumgefummel. Unter mit 0.4 und 0.3 funktioniert der Trick nicht. Wir muessen eine bessere Loesung finden. 
         hold on;
         polar(t,save_fft_rms_multichannel(k,:,j));  %-dB macht visualisierung
         % title([num2str(freq_band(k)),' Hz'],'color','r'); %benennt die einzelnen Polardiagramme nach ihren entsprechenden Mittenfrequenzen 'freq_band'
     end
     k = 1;
     factor = input('wie viele schritte vor (+1) oder zurueck (-1) ? - keine Eingabe (Enter) = Ende')
+    clf;
     j = j + factor
     end
