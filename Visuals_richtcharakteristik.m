@@ -23,8 +23,8 @@ rumfummel_begrenzung = ones(1,channelcnt+1);     %zweiter Polar-Kreis, der die S
     %%% Plotten %%%
     
     
-    j = 1
-    start = 1
+    j = 1;
+    start = 1;
     
     while j == j
     audioin = audio_1(save_segments(j):save_segments(j+1));
