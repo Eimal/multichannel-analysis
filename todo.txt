@@ -8,14 +8,14 @@ AMPLITUDENSKALIERUNG AUF db (z.B. FS = 0 dB)
 SPEKTRALE ZERLEGUNG MIT FILTERN z.B 15-31-62-125-250-1k-2k-4k-8k-16k-32k  = 10 Filter 
 x 33te channelcnt+1 im Richtdiagramm -> Kopie von 0°
 Verwendung von fftw lässt sich der Befehl fft beschleunigen
-Speichern der Analyseergebnisse in mat-files -> Beschleunigung des Skripts | teilweise erledigt, jedoch scheinen die Frequenzrichtdiagramme sich nicht immer an das aktuelle Segment anzupassen
-Speichern der .mat-files in einem mat-file
-Nicht nur vorwärts steppen, sondern auch rückwärts steppen
+x Speichern der Analyseergebnisse in mat-files -> Beschleunigung des Skripts | teilweise erledigt, jedoch scheinen die Frequenzrichtdiagramme sich nicht immer an das aktuelle Segment anzupassen
+x Speichern der .mat-files in einem mat-file
+x Nicht nur vorwärts steppen, sondern auch rückwärts steppen
 Visualisierung "Directivity Sonogram"
 x SPEKTRALE ZERLEGUNG MIT FFT
 x RMS-Werte scheinen nicht zu stimmen (Werte über 1?)
 variable Segmentlänge
-Rumfummel-Kreis funktioniert nicht gut
+x Rumfummel-Kreis funktioniert nicht gut
 zu wenig Platz für Polardiagramme bei Terzabstand
 Fehler bei Terzabstand
 UTF8 Skript
