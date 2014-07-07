@@ -19,3 +19,4 @@ x Rumfummel-Kreis funktioniert nicht gut
 zu wenig Platz für Polardiagramme bei Terzabstand
 Fehler bei Terzabstand
 UTF8 Skript
+Freq-Lineal stimmt evt. nicht mit fft überein
