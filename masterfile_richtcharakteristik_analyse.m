@@ -35,7 +35,8 @@ dirData = dir(dirName);      %# Get the data for the current directory
 
 Pathname_and_Filename = char(fileList);
 channelcnt = length(fileList); % Kanalanzahl automatisch ermittlen
-resolution = menu('Choose the desired resolution','Octave (-)','Third (+)');
+% resolution = menu('Choose the desired resolution','Octave (-)','Third (+)');
+resolution = 1;
 
 %%% Matlab benutzt seit Version 2013 den Befehl 'audioread'
 if verLessThan ('matlab','8.1.0.604') %Matlabversionen Vergleich
@@ -100,11 +101,13 @@ h = waitbar(j/segmentcount);
         
         save_polar_global = ones(segmentcount,(length(rms_global)));
         save_polar_global(j,:) = rms_global;
+        save_freq_band = freq_band;
     else
         save_polar_global(j,:) = rms_global;
         %save_polar_global = ones(segmentcount,(length(rms_global)));
         
         save_fft_rms_multichannel(:,:,j) = fft_rms_multichannel;
+        save_freq_band = freq_band;
     end
     
 % save_fft_rms_multichan

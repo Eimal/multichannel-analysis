@@ -64,10 +64,10 @@ polar_scale_fft = ones(1,channelcnt+1);     %zweiter Polar-Kreis, der die Skalie
         polar(t,polar_scale_fft,'-w'); %-dB Dieser Kreis gibt die Skalierung vor. Das ist ein ziemliches Rumgefummel. Unter mit 0.4 und 0.3 funktioniert der Trick nicht. Wir muessen eine bessere Loesung finden. 
         hold on;
         polar(t,save_fft_rms_multichannel(k,:,j));  %-dB macht visualisierung
-        % title([num2str(freq_band(k)),' Hz'],'color','r'); %benennt die einzelnen Polardiagramme nach ihren entsprechenden Mittenfrequenzen 'freq_band'
+        title([num2str(freq_band(k)),' Hz'],'color','r'); %benennt die einzelnen Polardiagramme nach ihren entsprechenden Mittenfrequenzen 'freq_band'
     end
     k = 1;
-    factor = input('wie viele schritte vor (+1) oder zurueck (-1) ? - keine Eingabe (Enter) = Ende')
+    factor = input('wie viele schritte vor (+1) oder zurueck (-1) ? - keine Eingabe (Enter) = Ende');
     clf;
-    j = j + factor
+    j = j + factor;
     end

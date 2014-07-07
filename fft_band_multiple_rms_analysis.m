@@ -3,19 +3,18 @@
 %%%%%%%%%%%%%%
 %Einkommentieren, falls eigenstaendiges Skript
 %%%%%%%%%%%%%%
-%clear all;
-%close all;
-%[filenameWavR,pathnameWavR]=uigetfile('*.wav','Audio-Datei auswaehlen');
-%[audioin,fs,bits]=wavread([pathnameWavR filenameWavR]);
-%resolution = 2; % Terzauflösung
-%freq_start = 62.5;   % untere Begrenzung des zu analysierenden Spektrums
-%freq_end = 16000;    % obere Begrenzung
+% clear all;
+% close all;
+% [filenameWavR,pathnameWavR]=uigetfile('*.wav','Audio-Datei auswaehlen');
+% [audioin,fs,bits]=wavread([pathnameWavR filenameWavR]);
+% resolution = 1; % Oktavaufloesung
+% freq_start = 62.5;   % untere Begrenzung des zu analysierenden Spektrums
+% freq_end = 16000;    % obere Begrenzung
 
 %%%%%%%%%%%%%%
 %Programmbeginn
 %%%%%%%%%%%%%%
 function [fft_bands_section_rms,freq_band] = fft_band_multiple_rms_analysis(audioin,fs,resolution,freq_start,freq_end) %; semicolon not necessary
-str=0;
 audio_end = length(audioin);
 
 fft_points = 4096; %%Verbessern!!
@@ -44,7 +43,8 @@ k = 1;
 j = 1;
 fft_bands_index = 1;
 fft_bands_section_rms = ones(1,length_freq_mid);
-        
+
+% str=0;        
 % if str == 0                         %%%%%
 %      fftw('planner', 'hybrid');     %Optimierung der FFT-Geschwindigkeit
 %      str = fftw('dwisdom');         %%%%%
@@ -65,27 +65,23 @@ while k < audio_end;
 %     end
     
     while j < length_freq_grenz;
-    freq_sector_grenz = freq_band_border(j+1)-freq_band_border(j);
-    fft_bands_index_end = floor(freq_sector_grenz/fft_bandwith);
+        freq_sector_grenz = freq_band_border(j+1)-freq_band_border(j);
+        fft_bands_index_end = floor(freq_sector_grenz/fft_bandwith);
         %%Unnuetze Schritte zusammenfassen%%
         %fft_bands_section = fft_bands_all(fft_bands_index:fft_bands_index_end);
         %fft_bands_section_rms(j) = rms(fft_bands_section);
     
-    %%%Die Funktion "rms" aus MATLABs Signal Processing Toolbox ersetzt Jakobs eigene Funktion rms_multiband. 
-    %%%RMS wird aus dem Vektor "fft_bands_all" aus dem oben erzeugten Bereich gebildet.
+        %%%Die Funktion "rms" aus MATLABs Signal Processing Toolbox ersetzt Jakobs eigene Funktion rms_multiband. 
+        %%%RMS wird aus dem Vektor "fft_bands_all" aus dem oben erzeugten Bereich gebildet.
 %dB     fft_bands_section_rms(j) = 10*log(rms_multiband(fft_bands_all(fft_bands_index:fft_bands_index_end))); %10*log = Umrechnung in dBFS
-    if neural_network_toolbox == 1 %-dB %%% Je nachdem, welche Tools installiert sind, wird RMS ueber die folgenden Befehle ermittelt %%%
-        fft_bands_section_rms(j) = rms_multiband(fft_bands_all(fft_bands_index:fft_bands_index_end)); 
-    elseif signal_processing_toolbox == 1
-        fft_bands_section_rms(j) = rms(fft_bands_all(fft_bands_index:fft_bands_index_end)); 
-    end
-    j = j + 1;
-	fft_bands_index = fft_bands_index_end+1;
+        if neural_network_toolbox == 1 %-dB %%% Je nachdem, welche Tools installiert sind, wird RMS ueber die folgenden Befehle ermittelt %%%
+            fft_bands_section_rms(j) = rms_multiband(fft_bands_all(fft_bands_index:fft_bands_index_end)); 
+        elseif signal_processing_toolbox == 1
+            fft_bands_section_rms(j) = rms(fft_bands_all(fft_bands_index:fft_bands_index_end)); 
+        end
+        j = j + 1;
+        fft_bands_index = fft_bands_index_end+1;
     end
 end
-
 clear j;
 clear k;
-
-% semilogx(freq_mid(1:9),rms_value(1:9))
-

@@ -11,7 +11,7 @@ function [freq_band,freq_band_border] = freq_lineal_erzeugen(resolution,freq_sta
 % freq_end = 16000;    % obere Begrenzung
 
 %%%%wenn "resolution" dieser Funktion hier uebergeben wird, brauchen wir das nicht zu ueberschreiben%%%% 
-% resolution = 1;              % 3 fuer Terzband, 2 fuer Oktavband
+% resolution = 1;              % 2 fuer Terzband, 1 fuer Oktavband
 
 switch resolution;
 	case 1;
