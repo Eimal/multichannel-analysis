@@ -7,12 +7,6 @@ close all;
 % Benennung der Diagramme aus fileList implementieren
 % GUI entwickeln - vor und zurueck steppen derzeit nur via prompt in Command
 % Window moeglich
-% Übergabe der Abtastrate  Fs als  Metadatum  im mat-File
-
-%Definitions
-
- Fs =  48000;
-
 
 
 % Laden der Daten aus dem skript "masterfile....mat"
@@ -45,19 +39,6 @@ polar_scale_fft = ones(1,channelcnt+1);     %zweiter Polar-Kreis, der die Skalie
     plot(redplot,'r');                                          %Plottet das aktuelle Segment rot
 
     
-%     title(fileList(1,1), 'color','r','Interpreter','none');
-%     subplot(4,1,2);                                             %Platziert die folgende Zeile an zweiter Stelle
-%     plot(audioin);                                              %Plottet das aktuelle Segment
-%     title(['Segment #',num2str(j)],'color','r','Interpreter','none');
-
-    %Polardiagramm des gesamten Spektrums
-    
-    %subplot(4,5,5);                     %Bei einer 4x5 Tabelle wird die folgende Grafik auf Zelle #5 geplottet
-    %polar(t,polar_scale_global,'-w');   %gibt maximale Skalierung vor
-    %hold on;                            %Haelt den oberen Kreis fest, damit die Skalierung gleich bleibt
-    %polar(t,save_polar_global(j,:));    %macht visualisierung
-    %title(['Global Polar'],'color','r');
-    
     %Spektrogramm (von Hobohms Skript%
     subplot(4,1,2); % data of channel 31 is used
     if j == 1
@@ -77,6 +58,7 @@ polar_scale_fft = ones(1,channelcnt+1);     %zweiter Polar-Kreis, der die Skalie
         polar(t,save_fft_rms_multichannel(k,:,j));  %-dB macht visualisierung
         title([num2str(freq_band(k)),' Hz'],'color','r'); %benennt die einzelnen Polardiagramme nach ihren entsprechenden Mittenfrequenzen 'freq_band'
         
+        %Polardiagramm des gesamten Spektrums
         subplot(4,5,20);                     %Bei einer 4x5 Tabelle wird die folgende Grafik auf Zelle #5 geplottet
         polar(t,polar_scale_global,'-w');   %gibt maximale Skalierung vor
         hold on;                            %Haelt den oberen Kreis fest, damit die Skalierung gleich bleibt

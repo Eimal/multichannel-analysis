@@ -90,7 +90,7 @@ h = waitbar(j/segmentcount);
         rms_global(:,i+1) = rms_global(:,1);
     end
     
-    % speicherbereich reservieren und speichern f�r globale und
+    % speicherbereich reservieren und speichern fuer globale und
     % fft-diferenzierte rms-werte
     
     if j == 1
@@ -119,7 +119,7 @@ end
 
 %####### Dateien Speichern #######
 analysis_save = strcat(char(dirName),'/','analysis.mat');
-save(analysis_save,'save_polar_global','save_fft_rms_multichannel','audio_1','fileList','save_segments','freq_band') % rms daten global
+save(analysis_save,'save_polar_global','save_fft_rms_multichannel','audio_1','fileList','save_segments','freq_band','Fs') % rms daten global
 
 %####### Fertig anzeigen und Progressbar schliesen #####
 close(h)
